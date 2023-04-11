@@ -1,0 +1,83 @@
+version: '3.4'
+
+services:
+  predixy:
+    image: haandol/predixy:latest
+    container_name: predixy
+    volumes:
+      - ./predixy/conf:/etc/predixy/conf
+    ports:
+      - 7617:7617
+    depends_on:
+      - redis-node1
+      - redis-node2
+      - redis-node3
+      - redis-node11
+      - redis-node21
+      - redis-node31
+      
+  redis-node1:
+    image: redis:7
+    container_name: redis-node1
+    command: redis-server /data/redis.conf --port 6300 --cluster-enabled yes --cluster-config-file /data/nodes.conf --cluster-node-timeout 5000 --appendonly yes
+    volumes:
+      - /etc/timezone:/etc/timezone
+      - ./redis/redis_6300.conf:/data/redis.conf
+    networks:
+      - redis-net
+
+  redis-node2:
+    image: redis:7
+    container_name: redis-node2
+    command: redis-server /data/redis.conf --port 6301 --cluster-enabled yes --cluster-config-file /data/nodes.conf --cluster-node-timeout 5000 --appendonly yes
+    volumes:
+      - /etc/timezone:/etc/timezone
+      - ./redis/redis_6301.conf:/data/redis.conf
+    networks:
+      - redis-net
+
+  redis-node3:
+    image: redis:7
+    container_name: redis-node3
+    command: redis-server /data/redis.conf --port 6302 --cluster-enabled yes --cluster-config-file /data/nodes.conf --cluster-node-timeout 5000 --appendonly yes
+    volumes:
+      - /etc/timezone:/etc/timezone
+      - ./redis/redis_6302.conf:/data/redis.conf
+    networks:
+      - redis-net
+
+  redis-node11:
+    image: redis:7
+    container_name: redis-node11
+    command: redis-server /data/redis.conf --port 6400 --cluster-enabled yes --cluster-config-file /data/nodes.conf --cluster-node-timeout 5000 --appendonly yes
+    volumes:
+      - /etc/timezone:/etc/timezone
+      - ./redis/redis_6400.conf:/data/redis.conf
+    networks:
+      - redis-net
+
+  redis-node21:
+    image: redis:7
+    container_name: redis-node21
+    command: redis-server /data/redis.conf --port 6401 --cluster-enabled yes --cluster-config-file /data/nodes.conf --cluster-node-timeout 5000 --appendonly yes
+    volumes:
+      - /etc/timezone:/etc/timezone
+      - ./redis/redis_6401.conf:/data/redis.conf
+    networks:
+      - redis-net
+
+  redis-node31:
+    image: redis:7
+    container_name: redis-node31
+    command: redis-server /data/redis.conf --port 6402 --cluster-enabled yes --cluster-config-file /data/nodes.conf --cluster-node-timeout 5000 --appendonly yes
+    volumes:
+      - /etc/timezone:/etc/timezone
+      - ./redis/redis_6402.conf:/data/redis.conf
+    networks:
+      - redis-net
+
+# docker network create --gateway 172.18.0.1--subnet 172.18.0.0/16 redis-net
+networks:
+  redis-net:
+    external:
+      name: redis-net
